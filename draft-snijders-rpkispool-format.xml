@@ -130,6 +130,15 @@
           </front>
         </reference>
 
+	<reference anchor="Sushi_Principle" target="https://web.archive.org/web/20161126104941/https://conferences.oreilly.com/strata/big-data-conference-ca-2015/public/schedule/detail/38737">
+          <front>
+            <title>The Sushi Principle: Raw Data Is Better</title>
+            <author fullname="Bobby Johnson"/>
+            <author fullname="Joseph Adler"/>
+            <date month="February" year="2015"/>
+          </front>
+        </reference>
+
       </references>
 
     </references>

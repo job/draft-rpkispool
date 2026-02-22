@@ -1,0 +1,146 @@
+<?xml version='1.0' encoding='utf-8'?>
+
+<!DOCTYPE rfc [
+ <!ENTITY nbsp  "&#160;">
+ <!ENTITY zwsp "&#8203;">
+ <!ENTITY nbhy "&#8209;">
+ <!ENTITY wj   "&#8288;">
+]>
+
+<?rfc sortrefs="yes"?>
+<?rfc subcompact="no"?>
+<?rfc symrefs="yes"?>
+<?rfc toc="yes"?>
+<?rfc tocdepth="3"?>
+<?rfc compact="yes"?>
+<?rfc subcompact="no"?>
+
+<rfc xmlns:xi="http://www.w3.org/2001/XInclude"
+     category="std"
+     docName="draft-snijders-rpkispool-format-00"
+     ipr="trust200902"
+     xml:lang="en"
+     sortRefs="true"
+     submissionType="IETF"
+     consensus="true"
+     version="3">
+
+  <front>
+
+    <title abbrev="RPKISPOOL Format">
+      The RPKISPOOL Format for Materializing Resource Public Key Infrastructure (RPKI) Data
+    </title>
+
+    <author fullname="Job Snijders" initials="J." surname="Snijders">
+      <organization abbrev="BSD">BSD Software Development</organization>
+      <address>
+        <postal>
+          <city>Amsterdam</city>
+          <country>NL</country>
+        </postal>
+        <email>job@bsd.nl</email>
+        <uri>https://www.bsd.nl/</uri>
+      </address>
+    </author>
+
+    <date />
+
+    <abstract>
+      <t>
+        This document describes a format to facilitate materialization of RPKI data.
+      </t>
+    </abstract>
+
+  </front>
+
+  <middle>
+    <section anchor="intro">
+      <name>Introduction</name>
+      <t>
+        This document describes...
+      </t>
+    </section>
+
+    <section anchor="format">
+      <name>Format Specification</name>
+      <t>
+        RPKISPOOl ...
+      </t>
+    </section>
+
+    <section anchor="security">
+      <name>Security Considerations</name>
+      <t>
+        The file format provides no authenticity ..
+      </t>
+    </section>
+
+    <section anchor="iana">
+      <name>IANA Considerations</name>
+      <t>
+        This document has no IANA actions.
+      </t>
+    </section>
+
+  </middle>
+
+  <back>
+
+    <references>
+      <name>References</name>
+
+      <references>
+        <name>Normative References</name>
+
+        <xi:include href="https://bib.ietf.org/public/rfc/bibxml/reference.RFC.8878.xml"/>
+
+        <reference anchor="SHS">
+          <front>
+            <title>Secure Hash Standard</title>
+            <author>
+              <organization>National Institute of Standards and Technology</organization>
+            </author>
+            <date month="August" year="2015"/>
+          </front>
+          <seriesInfo name="FIPS" value="PUB 180-4"/>
+        </reference>
+
+        <reference anchor="ustar" target="https://pubs.opengroup.org/onlinepubs/9799919799/utilities/pax.html#tag_20_94_13_06">
+          <front>
+            <title>ustar Interchange Format</title>
+            <author>
+              <organization>IEEE/Open Group</organization>
+            </author>
+            <date year="2024" month="June"/>
+          </front>
+          <seriesInfo name="IEEE Std" value="1003.1-2024"/>
+          <seriesInfo name="DOI" value="10.1109/IEEESTD.2018.8423794"/>
+        </reference>
+
+      </references>
+
+      <references>
+        <name>Informative References</name>
+
+	<reference anchor="RPKIViews" target="https://www.rpkiviews.org/">
+          <front>
+            <title>The RPKIViews Project</title>
+            <author fullname="Job Snijders"/>
+            <date year="2026"/>
+          </front>
+        </reference>
+
+      </references>
+
+    </references>
+
+   <section anchor="acknowledgements" numbered="false" toc="include">
+     <name>Acknowledgements</name>
+     <t>
+       The author would like to thank <contact fullname="..."/> for their help preparing this document.
+     </t>
+   </section>
+
+  </back>
+
+</rfc>

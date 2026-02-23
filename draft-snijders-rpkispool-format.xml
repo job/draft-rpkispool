@@ -43,6 +43,17 @@
       </address>
     </author>
 
+    <author fullname="Fedor Vompe" initials="F." surname="Vompe">
+      <organization abbrev="DT">Deutsche Telekom</organization>
+      <address>
+        <postal>
+          <city>Münster</city>
+          <country>DE</country>
+        </postal>
+        <email>Theodor-Fedor.Vompe@telekom.de</email>
+      </address>
+    </author>
+
     <date />
 
     <abstract>

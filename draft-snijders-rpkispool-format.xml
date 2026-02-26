@@ -107,6 +107,8 @@
 
         <xi:include href="https://bib.ietf.org/public/rfc/bibxml/reference.RFC.8878.xml"/>
 
+        <xi:include href="https://bib.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-sidrops-rpki-ccr.xml"/>
+
         <reference anchor="SHS">
           <front>
             <title>Secure Hash Standard</title>

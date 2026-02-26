@@ -58,7 +58,9 @@
 
     <abstract>
       <t>
-        This document describes a format to facilitate materialization of RPKI data.
+        This document describes a format and data storage approach for materialization of RPKI data in order to support a range of use cases such as auditing Certification Authorities and analytical research.
+        The rpkispool format can be used for high-latency replication of raw RPKI data and associated validation outcomes as efficiently compressed durable objects.
+        The method uses widely available standardized tooling and is designed to support long-term preservation of RPKI data in a cost-effective way.
       </t>
     </abstract>
 

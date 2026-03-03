@@ -70,21 +70,159 @@
     <section anchor="intro">
       <name>Introduction</name>
       <t>
-        This document describes...
+        The ability to economically archive multiple years worth of RPKI data produced by Certification Authorities (CAs) worldwide is essential for ongoing protocol maintenance, development of best practises, and incident research.
+        This document describes a format and data storage approach for efficiently materializing RPKI data for long-term preservation in compact archives using standardized tooling.
+      </t>
+      <t>
+        The <xref target="RPKIViews"/> project adheres to the <em>Sushi Principle</em> (<xref target="Sushi"/>): "raw" data is better than "cooked" data.
+        The guiding principle is that for maximum flexibility, to allow for future and unforeseen use cases, the data should be accessible in its original form, rather than some aggregated or processed form.
+        In order to collect RPKI material the RPKIViews project employs multiple topologically and geographically diverse vantages points and synchronizes using both Rsync and RRDP.
+      </t>
+      <t>
+        In February 2026, using the method described in this document, the <xref target="RPKIViews"/> project discovered and stored 4,961,325 RPKI objects (<xref target="RFC6487"/>, <xref target="RFC6488"/>) and produced 53,826 CCRs (<xref target="I-D.ietf-sidrops-rpki-ccr"/>).
+        Together this data would consume 1.2 TB in uncompressed form, however after compression only 16.3 GB remained, a 98.6% reduction.
+        The daily checkpoints together consumed 307 GB in uncompressed form and 14 GB in compressed form, a 95.4% reduction in size.
+        In other words, a full month's worth of RPKI data only manducated 30 GB of disk space.
+        Storing all the world's RPKI data at a rate of roughly 1 GB per day makes research fairly accessible and affordable.
       </t>
     </section>
 
-    <section anchor="format">
-      <name>Format Specification</name>
+    <section anchor="concept">
+      <name>Storage Concept and File Formats</name>
       <t>
-        RPKISPOOl ...
+        To capture the global RPKI's endless stream of data, batch processors divide the data stream into chunks of fixed duration, processing a day's worth of data at the end of every day.
       </t>
+      <t>
+        Each day starts with a set of initial and internally consistent snapshots, which together form the <tt>initstate</tt>, and throughout the day all change data, i.e., all newly discovered RPKI objects and associated validation outcome states (CCRs) are appended to a log: the <tt>rpkispool</tt>.
+      </t>
+      <t>
+        Bundling the RPKI objects together with CCRs and sorting the archive members in a specific way optimally allows compression algorithms to find redundant data and significantly improves compression ratios.
+      </t>
+
+      <t>
+        Archive files are formatted following the <xref target="ustar"/> specification and compressed in <xref target="RFC8878">Zstandard</xref> form with windowLog 27 (<tt>--long</tt>) at compression level 19.
+      </t>
+    </section>
+
+    <section anchor="filenames">
+      <name>Filename Scheme</name>
+      <t>
+        This section describes the filenames used for the archive members.
+        The filenaming scheme was designed to allow researchers to extract multiple rpkispool archives in a single directory without naming conflicts.
+      </t>
+
+      <section>
+        <name>Initstate filenaming scheme</name>
+        <t>
+          The filenames of the members of an <tt>initstate</tt> archive are constructed as follows:
+          <tt>${RPKIVIEWS_NODE_ID}/${PUBLICATION_POINT_FQDN}/path/to/object.${EXTENSION}</tt>.
+        </t>
+        <t>
+          An example is as follows:
+        </t>
+        <sourcecode>
+$ zstdcat 20260301-initstate.tar.zst | tar -tf- | head -n 20
+ams1/akane.maru.co.jp/repo/1073c6/1/3134302e3233352e3139392e302f32342d3234203d3e20323134363735.roa
+blr1/akane.maru.co.jp/repo/1073c6/1/3134302e3233352e3139392e302f32342d3234203d3e20323134363735.roa
+blr2/akane.maru.co.jp/repo/1073c6/1/3134302e3233352e3139392e302f32342d3234203d3e20323134363735.roa
+dus1/akane.maru.co.jp/repo/1073c6/1/3134302e3233352e3139392e302f32342d3234203d3e20323134363735.roa
+miso/akane.maru.co.jp/repo/1073c6/1/3134302e3233352e3139392e302f32342d3234203d3e20323134363735.roa
+nyc1/akane.maru.co.jp/repo/1073c6/1/3134302e3233352e3139392e302f32342d3234203d3e20323134363735.roa
+sng1/akane.maru.co.jp/repo/1073c6/1/3134302e3233352e3139392e302f32342d3234203d3e20323134363735.roa
+syd1/akane.maru.co.jp/repo/1073c6/1/3134302e3233352e3139392e302f32342d3234203d3e20323134363735.roa
+syd2/akane.maru.co.jp/repo/1073c6/1/3134302e3233352e3139392e302f32342d3234203d3e20323134363735.roa
+yyz1/akane.maru.co.jp/repo/1073c6/1/3134302e3233352e3139392e302f32342d3234203d3e20323134363735.roa
+zur1/akane.maru.co.jp/repo/1073c6/1/3134302e3233352e3139392e302f32342d3234203d3e20323134363735.roa
+zur2/akane.maru.co.jp/repo/1073c6/1/3134302e3233352e3139392e302f32342d3234203d3e20323134363735.roa
+ams1/akane.maru.co.jp/repo/1073c6/1/F03205B3993400CC3FC657EFE68E0696DA332458.crl
+blr1/akane.maru.co.jp/repo/1073c6/1/F03205B3993400CC3FC657EFE68E0696DA332458.crl
+blr2/akane.maru.co.jp/repo/1073c6/1/F03205B3993400CC3FC657EFE68E0696DA332458.crl
+dus1/akane.maru.co.jp/repo/1073c6/1/F03205B3993400CC3FC657EFE68E0696DA332458.crl
+miso/akane.maru.co.jp/repo/1073c6/1/F03205B3993400CC3FC657EFE68E0696DA332458.crl
+nyc1/akane.maru.co.jp/repo/1073c6/1/F03205B3993400CC3FC657EFE68E0696DA332458.crl
+sng1/akane.maru.co.jp/repo/1073c6/1/F03205B3993400CC3FC657EFE68E0696DA332458.crl
+syd1/akane.maru.co.jp/repo/1073c6/1/F03205B3993400CC3FC657EFE68E0696DA332458.crl
+        </sourcecode>
+      </section>
+
+      <section>
+        <name>Rpkispool filenaming scheme</name>
+        <t>
+          The filenames of the members of an <tt>rpkispool</tt> archive are constructed in one of two ways.
+          Members whose filename starts with <tt>static/</tt> are DER-encoded RPKI objects where the filename is the SHA-256 (<xref target="SHS"/>) of the object encoded using Base64 with the filename safe alphabet (<xref target="RFC4648" section="5"/>).
+          For performance reasons, the directory hierarchy in <tt>static/</tt>is constructed using the last few bytes of the SHA-256.
+        </t>
+        <t>
+          Any other members are auxiliary data and grouped according to production date, using the form <tt>${YEAR}/${MONTH}/${DAY}/${ISO8601}-${NODEID}.${EXTENSION}</tt>.
+          The filename extension signifies the type of file.
+        </t>
+        <t>
+          An example is as follows:
+        </t>
+        <sourcecode>
+$ zstdcat 20260301-rpkispool.tar.zst | tar -tf- | grep -m 1 -B 10 -A 10 2026/
+static/xs/Ec/-fNEEKsF1NLwAtLAxQtqolj7UXWj9I9nJjBWGwlxsEc
+static/yI/iA/Ix5u73xRGkXAwjg2-93ULtv-yHXqV9_ucDIXZ-5yIiA
+static/ya/Z8/vfnWEX976G9V1uRL_-i6G-G4DICffwpq7drYOnJyaZ8
+static/zM/Q4/rleR5X9N8s1vj_zuwV7JyleKmfcAfglrd1CCuHEzMQ4
+static/-j/lc/lJ7XMmaXnUt0OstDsW4rKBVi8XKE51r6iC4sxq8-jlc
+static/0K/LU/HvnvCbGHIE42NpG6Fpx8NK_94LLNHHbZsuh1Q7l0KLU
+static/0s/8Y/eQmMs0N8T2FObu-k7HorubQqUrVQd3lkM7Mm_kZ0s8Y
+static/1A/HE/QWFu2t5XTsuMGhaVowKVMrKyRmLlHJlmqL7uf0M1AHE
+static/1D/XQ/sKeIyf9Fj71hW0R0SPcFViBchkZvcNhi6VL45V-1DXQ
+static/1Z/jU/2SMhqOUgK5NYtq3L06ZqFHvZdKbhDi9HYAbCPlc1ZjU
+2026/03/01/20260301T000035Z-miso.ccr
+2026/03/01/20260301T000035Z-miso.log
+2026/03/01/20260301T000035Z-miso.metrics
+static/2C/M8/gRAUD18G1a4Sr5A0jrH7kTpX4Yj1Zfrywjt5yeD2CM8
+static/2N/j4/TVkptGmN3prJANdeWxQVS1Bt-UpnjtDX6RzIG-B2Nj4
+static/2k/7U/vKNQKfG--QClvWrie6lq_LZSPiXhkcxHK_Thfkf2k7U
+static/2p/YM/jRRbQXFhjlhk-Xd6jAgShu3v1eyFxfIekY_BUSc2pYM
+static/3I/rM/P-9fPiA2KjBGj9WTOzv2ESP9JDpbUzjPeIaSjfb3IrM
+static/3K/0s/j_TEWaLDXKqqHPxUC-im0MxTfwwJCpI5tkMHoG93K0s
+static/3Q/Lk/gM_ST0n22aL3Di66t90ntLACau2tQHvl2g8rb7J3QLk
+static/4Q/0I/3LP1SRW2KXKgA8SpsyF-F4LHyBAoCh9_tJxkNir4Q0I
+        </sourcecode>
+      </section>
+
+    </section>
+
+    <section>
+      <name>Rpkispool Construction</name>
+      <t>
+        The vantage points are relying party instances which periodically perform synchronization and validation and produce a CCR for each iteration.
+        After each iteration the previous and current CCR are compared to deduce which objects are newly discovered.
+        Newly discovered objects are appended to an hourly tar archive together with the CCR and any other auxiliary data files.
+      </t>
+      <t>
+        These hourly intermediate states are collected and materialized to a durable distributed filesystem serve as input to the daily compactization process.
+        The daily compactization proces deduplicates objects, normalizes timestamps using the method specified in <xref target="RFC9589"/>, and performs Zstandard compression.
+      </t>
+    </section>
+
+    <section anchor="mirrors" removeInRFC="true">
+      <name>RPKIViews Mirrors</name>
+      <t>
+        The <xref target="RPKIViews"/> project produces a daily rpkispool combined from 10+ vantage points worldwide.
+        Starting January 1st, 2026, every day a new rpkispool file is made available containing all yesterday's RPKI data.
+        These rpkispool files are mirrored at the following publicly accessible locations:
+      </t>
+      <dl>
+        <dt>Netherlands</dt>
+        <dd><tt>rsync://josephine.sobornost.net/rpki/rpkispools/</tt></dd>
+
+        <dt>Japan</dt>
+        <dd><tt>rsync://dango.attn.jp/rpki/rpkispools/</tt></dd>
+
+        <dt>United States</dt>
+        <dd><tt>rsync://rpkiviews.kerfuffle.net/rpki/rpkispools/</tt></dd>
+      </dl>
     </section>
 
     <section anchor="security">
       <name>Security Considerations</name>
       <t>
-        The file format provides no authenticity ..
+        The storage format provides no authenticity and may appear to be zip bombs.
       </t>
     </section>
 
@@ -105,7 +243,11 @@
       <references>
         <name>Normative References</name>
 
+        <xi:include href="https://bib.ietf.org/public/rfc/bibxml/reference.RFC.4648.xml"/>
+        <xi:include href="https://bib.ietf.org/public/rfc/bibxml/reference.RFC.6487.xml"/>
+        <xi:include href="https://bib.ietf.org/public/rfc/bibxml/reference.RFC.6488.xml"/>
         <xi:include href="https://bib.ietf.org/public/rfc/bibxml/reference.RFC.8878.xml"/>
+        <xi:include href="https://bib.ietf.org/public/rfc/bibxml/reference.RFC.9589.xml"/>
 
         <xi:include href="https://bib.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-sidrops-rpki-ccr.xml"/>
 
@@ -145,7 +287,7 @@
           </front>
         </reference>
 
-	<reference anchor="Sushi_Principle" target="https://web.archive.org/web/20161126104941/https://conferences.oreilly.com/strata/big-data-conference-ca-2015/public/schedule/detail/38737">
+	<reference anchor="Sushi" target="https://web.archive.org/web/20161126104941/https://conferences.oreilly.com/strata/big-data-conference-ca-2015/public/schedule/detail/38737">
           <front>
             <title>The Sushi Principle: Raw Data Is Better</title>
             <author fullname="Bobby Johnson"/>
@@ -158,12 +300,14 @@
 
     </references>
 
+<!--
    <section anchor="acknowledgements" numbered="false" toc="include">
      <name>Acknowledgements</name>
      <t>
        The author would like to thank <contact fullname="..."/> for their help preparing this document.
      </t>
    </section>
+-->
 
   </back>
 

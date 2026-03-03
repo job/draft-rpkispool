@@ -16,8 +16,8 @@
 <?rfc subcompact="no"?>
 
 <rfc xmlns:xi="http://www.w3.org/2001/XInclude"
-     category="std"
-     docName="draft-snijders-rpkispool-format-00"
+     category="info"
+     docName="draft-snijders-rpkispool-format-01"
      ipr="trust200902"
      xml:lang="en"
      sortRefs="true"

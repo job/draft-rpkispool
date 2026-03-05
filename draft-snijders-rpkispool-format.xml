@@ -219,6 +219,13 @@ static/4Q/0I/3LP1SRW2KXKgA8SpsyF-F4LHyBAoCh9_tJxkNir4Q0I
       </dl>
     </section>
 
+    <section anchor="implementation" removeInRFC="true">
+      <name>Implementation Status</name>
+      <t>
+        A Python-based command line interface utility is available for reference: <xref target="rpkispool-cli"/>.
+      </t>
+    </section>
+
     <section anchor="security">
       <name>Security Considerations</name>
       <t>
@@ -282,6 +289,15 @@ static/4Q/0I/3LP1SRW2KXKgA8SpsyF-F4LHyBAoCh9_tJxkNir4Q0I
 	<reference anchor="RPKIViews" target="https://www.rpkiviews.org/">
           <front>
             <title>The RPKIViews Project</title>
+            <author fullname="Job Snijders"/>
+            <date year="2026"/>
+          </front>
+        </reference>
+
+        <reference anchor="rpkispool-cli" target="https://github.com/fvompe/rpkispool-cli">
+          <front>
+            <title>rpkispool-cli</title>
+            <author fullname="Fedor Vompe"/>
             <author fullname="Job Snijders"/>
             <date year="2026"/>
           </front>
